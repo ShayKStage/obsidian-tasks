@@ -42,6 +42,7 @@
             name = "Obsidian Tasks";
             buildInputs = with pkgs; [
               formatter
+              corepack
             ];
           };
         };

@@ -1,8 +1,8 @@
-import process from 'process';
-import { sassPlugin } from 'esbuild-sass-plugin';
-import esbuild from 'esbuild';
 import builtins from 'builtin-modules';
+import esbuild from 'esbuild';
+import { sassPlugin } from 'esbuild-sass-plugin';
 import esbuildSvelte from 'esbuild-svelte';
+import process from 'process';
 import sveltePreprocess from 'svelte-preprocess';
 
 const banner = `/*
@@ -202,7 +202,7 @@ esbuild
         format: 'cjs',
         logLevel: 'info',
         minify: prod ? true : false,
-        outdir: '.',
+        outdir: prod ? './out/prod' : './out/dev',
         plugins: [
             esbuildSvelte({
                 preprocess: sveltePreprocess(),

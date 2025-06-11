@@ -41,7 +41,10 @@
     "tests/**/*"
   ],
   "exclude": [
-    "node_modules/*"
+    "node_modules/*",
+    "out/*",
+    ".direnv/*",
+    "result/*"
   ],
   "typedocOptions": {
     "name": "Tasks plugin",
