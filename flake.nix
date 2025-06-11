@@ -28,20 +28,52 @@
           system,
           ...
         }@args:
-        let
+        {
           formatter = pkgs.nixfmt-tree.override {
             settings = {
               tree-root-file = "flake.nix";
             };
           };
-        in
-        {
-          inherit formatter;
+
+          packages.default = pkgs.stdenv.mkDerivation (
+            finalAttrs:
+            let
+              pkgJson = (builtins.fromJSON (builtins.readFile ./package.json));
+            in
+            {
+              pname = pkgJson.name;
+              version = pkgJson.version;
+
+              src = lib.sources.cleanSource ./.;
+
+              yarnOfflineCache = pkgs.fetchYarnDeps {
+                yarnLock = finalAttrs.src + "/yarn.lock";
+                hash = "sha256-ecPZvpMQkL2o0X4qx6h1jwQVZrtTC3+Aj7n/SBLRQbo=";
+              };
+
+              nativeBuildInputs = with pkgs; [
+                yarnConfigHook
+                yarnBuildHook
+                nodejs
+              ];
+
+              installPhase = ''
+                mkdir -p $out/lib/${finalAttrs.pname}-${finalAttrs.version}
+                cp ./out/prod/* $out/lib/${finalAttrs.pname}-${finalAttrs.version}
+              '';
+
+              meta = {
+                description = pkgJson.description;
+                homepage = "https://publish.obsidian.md/tasks/Introduction";
+                license = lib.licenses.mit;
+              };
+            }
+          );
 
           devShells.default = pkgs.mkShell {
             name = "Obsidian Tasks";
             buildInputs = with pkgs; [
-              formatter
+              config.formatter
               corepack
             ];
           };
