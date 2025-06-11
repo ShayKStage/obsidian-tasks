@@ -55,3 +55,7 @@ yarn-error.log
 
 # VS code config
 .vscode/
+
+# Nix & direnv
+result
+.direnv
