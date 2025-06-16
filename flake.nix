@@ -72,10 +72,14 @@
 
           devShells.default = pkgs.mkShell {
             name = "Obsidian Tasks";
-            buildInputs = with pkgs; [
+            packages = with pkgs; [
               config.formatter
               corepack
+              glibcLocales
             ];
+            LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+            LC_NUMERIC = "en_US.UTF-8";
+            LANG = "en_US.UTF-8";
           };
         };
     };
